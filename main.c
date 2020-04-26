@@ -1,4 +1,4 @@
-#include "Library/grafos.h"
+#include "libraries/grafos.h"
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
