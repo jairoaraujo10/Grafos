@@ -38,6 +38,9 @@ void showAdjList(Graph G);
 // Imprime a matriz de adjacência do grafo G
 void showAdjMatrix(Graph G);
 
+// Verifica se o grafo possui aresta de  peso  negativo
+int arestaNegativa(Graph G);
+
 // Libera o espaço alocado para o grafo G
 void liberaGrafo(Graph G);
 
@@ -64,15 +67,13 @@ int Relax(vertex u, vertex v, float w, CaminhosMinimos C);
 // Algoritmo de Dijkstra: Recebe um grafo G, um vértice src partir do qual
 // serão calculados os menores caminhos até os demais vértices. Retorna um array
 // de caminhos mínimos (com peso do caminho e predecessor do vértice do índice).
-// Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e a execuçãodo
-// código é interrompida.
+// Se o grafo  possuir aresta de peso negativo, é alertado  e é returnado NULL.
 CaminhosMinimos Dijkstra(Graph G, vertex src);
 
 // Algoritmo de Bellman Ford: Recebe um grafo G, um vértice src partir do qual
 // serão calculados os menores caminhos até os demais vértices. Retorna um array
 // de caminhos mínimos (com peso do caminho e predecessor do vértice do índice).
-// Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e a execuçãodo
-// código é interrompida.
+// Se o grafo  possuir ciclo de peso negativo, é alertado e é returnado NULL.
 CaminhosMinimos BellmanFord(Graph G, vertex src);
 
 #endif //GRAFOS_GRAFOS_H

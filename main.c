@@ -1,4 +1,5 @@
 #include "Library/grafos.h"
+#include <stdio.h>
 
 int main(int argc, char *argv[]) {
 
@@ -21,9 +22,11 @@ int main(int argc, char *argv[]) {
     showAdjMatrix(G);
 
     vertex src = 3;
+    printf("Algoritmo de Bellman-Ford\n");
     CaminhosMinimos C = BellmanFord(G, src);
     imprimeCaminhos(C);
 
+    printf("Algoritmo de Dijkstra\n");
     C = Dijkstra(G, src);
     imprimeCaminhos(C);
 

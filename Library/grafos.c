@@ -46,6 +46,7 @@ void addEdge(Graph G, vertex u, vertex v, float weight) {
 }
 
 void showAdjList(Graph G) {
+    if (G == NULL) return;
     vertex a;
     link b;
     printf("Lista de adjacência:\n\t");
@@ -60,6 +61,7 @@ void showAdjList(Graph G) {
 }
 
 void showAdjMatrix(Graph G) {
+    if (G == NULL) return;
     vertex u, v;
     printf("Matriz de adjacência:\n\t");
     for (u = 0; u < G->V; u++) {
@@ -72,7 +74,18 @@ void showAdjMatrix(Graph G) {
     printf("\n");
 }
 
+int arestaNegativa(Graph G) {
+    int u, v;
+    for (u = 0; u < G->V; u++) {
+        for (v = 0; v < G->V; v++) {
+            if (G->adjMat[u][v] < 0) return 1;
+        }
+    }
+    return 0;
+}
+
 void liberaGrafo(Graph G) {
+    if (G == NULL) return;
     vertex v;
     link atual, proxNode;
     for (v = 0; v < G->V; v++) {
@@ -105,10 +118,12 @@ CaminhosMinimos caminhos_init(Graph G, vertex src) {
 }
 
 void imprimeCaminhos(CaminhosMinimos C) {
+    if (C == NULL) return;
     int i, j;
     for (i = 0; i < C->V; i++) {
         j = i;
         if (C->array[j].pai != -1) {
+            printf("\t");
             do {
                 if (j != i) printf(" <- ");
                 printf("%d", j);
@@ -122,6 +137,7 @@ void imprimeCaminhos(CaminhosMinimos C) {
 }
 
 void liberaCaminhos(CaminhosMinimos C) {
+    if (C == NULL) return;
     free(C->array);
     free(C);
 }
@@ -142,6 +158,11 @@ int Relax(vertex u, vertex v, float w, CaminhosMinimos C) {
 
 CaminhosMinimos Dijkstra(Graph G, vertex src) {
     vertex u, v;
+
+    if (arestaNegativa(G)) {
+        printf("------- O grafo possui aresta de peso negativo -------\n\n");
+        return NULL;
+    }
 
     // Cria uma lista de caminhos e atribui os valores iniciais dos pesos das arestas e dos predecessores dos vértices;
     CaminhosMinimos C = caminhos_init(G, src);
@@ -211,8 +232,8 @@ CaminhosMinimos BellmanFord(Graph G, vertex src) {
             v = p->v;
             // Se o relax retornar 1, o grafo possui cíclo de peso negativo;
             if (Relax(u, v, p->weight, C)) {
-                printf("\n------- O grafo possui ciclo de peso negativo -------\n\n");
-                exit(-1);
+                printf("------- O grafo possui ciclo de peso negativo -------\n\n");
+                return NULL;
             }
             p = p->next;
         }
