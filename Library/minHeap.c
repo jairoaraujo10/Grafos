@@ -1,6 +1,7 @@
+#include "minHeap.h"
+#include "grafos.h"
 #include <stdlib.h>
 #include <string.h>
-#include "minHeap.h"
 
 minHeapNode newMinHeapNode(vertex v, CaminhosMinimos C) {
     minHeapNode minHN = malloc(sizeof(minHeapNode));
