@@ -3,4 +3,4 @@ project(Grafos C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(Grafos main.c grafos.c grafos.h)
+add_executable(Grafos main.c Library/grafos.c Library/grafos.h)

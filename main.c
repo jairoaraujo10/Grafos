@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "grafos.h"
+#include "Library/grafos.h"
 
 int main(int argc, char *argv[]) {
     int V = 3;
