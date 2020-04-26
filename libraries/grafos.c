@@ -156,6 +156,7 @@ int Relax(vertex u, vertex v, float w, CaminhosMinimos C) {
     return 0;
 }
 
+
 CaminhosMinimos Dijkstra(Graph G, vertex src) {
     vertex u, v;
 
@@ -239,4 +240,81 @@ CaminhosMinimos BellmanFord(Graph G, vertex src) {
         }
     }
     return C;
+}
+
+Graph GetSourceGraph(Graph G) {
+    int i;
+    Graph G0 = createGraph(G->V + 1);
+    link p;
+    for (i = 1; i < G0->V; i++)
+        addEdge(G0, 0, i, 0);
+
+    for (i = 0; i < G->V; i++) {
+        p = G->adjList[i].head;
+        while (p != NULL) {
+            addEdge(G0, i + 1, p->v + 1, p->weight);
+            p = p->next;
+        }
+    }
+    return G0;
+}
+
+CaminhosMinimos *Johnson(Graph G) {
+    int i, j;
+
+    // Crie um array de caminhos mínimos
+    CaminhosMinimos *CMin = calloc(G->V, sizeof(CaminhosMinimos));
+    for (i = 0; i < G->V; i++)
+        CMin[i] = caminhos_init(G, i);
+
+    // Calcula G' a partir de G;
+    Graph G0 = GetSourceGraph(G);
+
+    // Execute o algoritmo de Bellman-Ford em G' a partir do vértice s para verificar
+    // se o grafo possui ciclos. Se G' não possuir ciclo de peso negativo, calcule
+    // os valores de h(v);
+    CaminhosMinimos CaminhosG0 = BellmanFord(G0, 0);
+
+    // Cria um grafo G1, onde:
+    //  V(G1) = V(G)
+    //  E(G1) = E(G)
+    Graph G1 = createGraph(G->V);
+
+    float W;
+    link p;
+    // Para cada (u,v) pertencente a E(G) faça:
+    for (i = 1; i < G0->V; i++) {
+        p = G0->adjList[i].head;
+        while (p != NULL) {
+            // W'(u,v) = W(u,v) + h(u) - h(v);
+            W = p->weight + CaminhosG0->array[i].weight - CaminhosG0->array[p->v].weight;
+            if (W > infn)
+                W = infn;
+            // W'(u,v) é o peso atualizado das arestas de G1 que ligam os vértices u a v;
+            addEdge(G1, i - 1, p->v - 1, W);
+            p = p->next;
+        }
+    }
+    free(p);
+
+    // Para cada vértice v pertencente a G1 faça:
+    for (i = 0; i < G1->V; i++) {
+        // Executa o algoritmo de Dijkstra no grafo G1 a partir de u(i);
+        CMin[i] = Dijkstra(G1, i);
+        // Desfaz a operação que atualizou o peso das arestas de G1;
+        // h(u,v) = h'(u,v) + h(v+1) - h(u+1)
+        for (j = 0; j < G1->V; j++) {
+            if (CMin[i]->array[j].weight == infn)
+                CMin[i]->array[j].weight = infn;
+            else
+                CMin[i]->array[j].weight = CMin[i]->array[j].weight + CaminhosG0->array[j + 1].weight - CaminhosG0->array[i + 1].weight;
+        }
+    }
+
+    liberaGrafo(G0);
+    liberaGrafo(G1);
+    liberaCaminhos(CaminhosG0);
+
+    // Retorne um array de caminhos mínimos;
+    return CMin;
 }
