@@ -1,6 +1,8 @@
 #ifndef GRAFOS_GRAFOS_H
 #define GRAFOS_GRAFOS_H
 
+#include "minHeap.h"
+
 #define vertex int
 #define infn 999999
 
@@ -59,35 +61,6 @@ CaminhosMinimos caminhos_init(Graph G, vertex s);
 void imprimeCaminhos(CaminhosMinimos C);
 
 void liberaCaminhos(CaminhosMinimos C);
-
-// Estrutura que representa um nó da min heap
-typedef struct MinHeapNode {
-    int v;
-    float dist;
-} *minHeapNode;
-
-// Estrutura que representa a min heap
-typedef struct MinHeap {
-    int size;                       // Número de nós
-    int *pos;
-    minHeapNode *array;             // Ponteiro que aponta para a lista de caminhos
-} *minHeap;
-
-minHeapNode newMinHeapNode(vertex v, CaminhosMinimos C);
-
-minHeap createMinHeap(int capacity);
-
-void swapMinHeapNode(minHeapNode *a, minHeapNode *b);
-
-void minHeapify(minHeap minH, vertex idx);
-
-int isEmpty(minHeap minH);
-
-minHeapNode extractMin(minHeap minH);
-
-void decreaseKey(minHeap minH, vertex v, float weight);
-
-int isInMinHeap(minHeap minH, vertex v);
 
 // Função de relaxamento entre os vértices u e v.
 int Relax(vertex u, vertex v, float w, CaminhosMinimos C);
