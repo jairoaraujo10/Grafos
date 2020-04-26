@@ -22,7 +22,10 @@ int main(int argc, char *argv[]) {
 
     vertex src = 3;
     CaminhosMinimos C = BellmanFord(G, src);
-    imprimeCaminhos(G, src, C);
+    imprimeCaminhos(C);
+
+    C = Dijkstra(G, src);
+    imprimeCaminhos(C);
 
     liberaCaminhos(C);
     liberaGrafo(G);

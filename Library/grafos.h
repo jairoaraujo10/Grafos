@@ -12,20 +12,16 @@ struct Node {
     link next;
 };
 
-typedef struct AdjList *adj;
-
-struct AdjList {
+typedef struct AdjList {
     link head;
-};
+} *adj;
 
-struct graph {
+typedef struct graph {
     int V;
     int E;
     adj adjList;
     float **adjMat;
-};
-
-typedef struct graph *Graph;
+} *Graph;
 
 // Retorna um grafo com V vertices
 Graph createGraph(int V);
@@ -45,21 +41,63 @@ void showAdjMatrix(Graph G);
 // Libera o espaço alocado para o grafo G
 void liberaGrafo(Graph G);
 
-struct caminhos {
+typedef struct {
     vertex pai;
     float weight;
+} *caminhos;
+
+struct caminhosMinimos {
+    caminhos array;
+    int V;
+    int src;
 };
 
-typedef struct caminhos *CaminhosMinimos;
+typedef struct caminhosMinimos *CaminhosMinimos;
 
 CaminhosMinimos caminhos_init(Graph G, vertex s);
 
-void imprimeCaminhos(Graph G, vertex src, CaminhosMinimos C);
+void imprimeCaminhos(CaminhosMinimos C);
 
 void liberaCaminhos(CaminhosMinimos C);
 
+// Estrutura que representa um nó da min heap
+typedef struct MinHeapNode {
+    int v;
+    float dist;
+} *minHeapNode;
+
+// Estrutura que representa a min heap
+typedef struct MinHeap {
+    int size;                       // Número de nós
+    int *pos;
+    minHeapNode *array;             // Ponteiro que aponta para a lista de caminhos
+} *minHeap;
+
+minHeapNode newMinHeapNode(vertex v, CaminhosMinimos C);
+
+minHeap createMinHeap(int capacity);
+
+void swapMinHeapNode(minHeapNode *a, minHeapNode *b);
+
+void minHeapify(minHeap minH, vertex idx);
+
+int isEmpty(minHeap minH);
+
+minHeapNode extractMin(minHeap minH);
+
+void decreaseKey(minHeap minH, vertex v, float weight);
+
+int isInMinHeap(minHeap minH, vertex v);
+
 // Função de relaxamento entre os vértices u e v.
 int Relax(vertex u, vertex v, float w, CaminhosMinimos C);
+
+// Algoritmo de Dijkstra: Recebe um grafo G, um vértice src partir do qual
+// serão calculados os menores caminhos até os demais vértices. Retorna um array
+// de caminhos mínimos (com peso do caminho e predecessor do vértice do índice).
+// Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e a execuçãodo
+// código é interrompida.
+CaminhosMinimos Dijkstra(Graph G, vertex src);
 
 // Algoritmo de Bellman Ford: Recebe um grafo G, um vértice src partir do qual
 // serão calculados os menores caminhos até os demais vértices. Retorna um array
