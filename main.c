@@ -5,6 +5,7 @@ int main(int argc, char *argv[]) {
 
     int V = 8;
     Graph G = createGraph(V);
+
     addEdge(G, 0, 1, 1);
     addEdge(G, 0, 2, 3);
     addEdge(G, 0, 4, 6);
