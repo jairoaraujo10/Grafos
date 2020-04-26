@@ -1,9 +1,10 @@
 #include "libraries/grafos.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
 
-    int V = 8;
+    int V = 8, i, j;
     Graph G = createGraph(V);
 
     addEdge(G, 0, 1, 1);
@@ -22,17 +23,36 @@ int main(int argc, char *argv[]) {
     showAdjList(G);
     showAdjMatrix(G);
 
-    vertex src = 3;
-    printf("Algoritmo de Bellman-Ford\n");
-    CaminhosMinimos C = BellmanFord(G, src);
-    imprimeCaminhos(C);
+    vertex src = 0;
+    printf("Algoritmo de Bellman-Ford:\n");
+    CaminhosMinimos C0 = BellmanFord(G, src);
+    imprimeCaminhos(C0);
+    liberaCaminhos(C0);
 
-    printf("Algoritmo de Dijkstra\n");
-    C = Dijkstra(G, src);
-    imprimeCaminhos(C);
+    printf("Algoritmo de Dijkstra:\n");
+    CaminhosMinimos C1 = Dijkstra(G, src);
+    imprimeCaminhos(C1);
+    liberaCaminhos(C1);
 
-    liberaCaminhos(C);
+    printf("Algoritmo de Johnson:\n");
+    CaminhosMinimos *CMin = Johnson(G);
+    for (i = 0; i < G->V; i++) {
+        imprimeCaminhos(CMin[i]);
+    }
+
+    // Imprime a matriz dos menores caminhos entre todos os pares de vértices
+    /*for (i = 0; i < sizeof(CMin); i++) {
+        for (j = 0; j < G->V; j++) {
+            if (CMin[i]->array[j].weight == infn) printf("\tinfn");
+            else printf("\t%.2f", CMin[i]->array[j].weight);
+        }
+        printf("\n");
+    }*/
+
+    for (i = 0; i < G->V; i++) {
+        liberaCaminhos(CMin[i]);
+    }
+    free(CMin);
     liberaGrafo(G);
-
     return 1;
 }
