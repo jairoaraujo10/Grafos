@@ -104,9 +104,8 @@ CaminhosMinimos caminhos_init(Graph G, vertex s) {
 }
 
 void imprimeCaminhos(Graph G, vertex src, CaminhosMinimos C) {
-    int V = G->V;
     int i, j;
-    for (i = 0; i < V; i++) {
+    for (i = 0; i < G->V; i++) {
         j = i;
         if (C[j].pai != -1) {
             do {
