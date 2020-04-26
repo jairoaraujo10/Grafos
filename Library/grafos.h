@@ -1,8 +1,6 @@
 #ifndef GRAFOS_GRAFOS_H
 #define GRAFOS_GRAFOS_H
 
-#include "minHeap.h"
-
 #define vertex int
 #define infn 999999
 
@@ -14,11 +12,11 @@ struct Node {
     link next;
 };
 
-typedef struct AdjList {
+typedef struct {
     link head;
 } *adj;
 
-typedef struct graph {
+typedef struct {
     int V;
     int E;
     adj adjList;
@@ -48,13 +46,11 @@ typedef struct {
     float weight;
 } *caminhos;
 
-struct caminhosMinimos {
+typedef struct {
     caminhos array;
     int V;
     int src;
-};
-
-typedef struct caminhosMinimos *CaminhosMinimos;
+} *CaminhosMinimos;
 
 CaminhosMinimos caminhos_init(Graph G, vertex s);
 

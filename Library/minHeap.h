@@ -7,13 +7,13 @@
 #define infn 999999
 
 // Estrutura que representa um nó da min heap
-typedef struct MinHeapNode {
+typedef struct {
     int v;
     float dist;
 } *minHeapNode;
 
 // Estrutura que representa a min heap
-typedef struct MinHeap {
+typedef struct {
     int size;                       // Número de nós
     int *pos;
     minHeapNode *array;             // Ponteiro que aponta para a lista de caminhos
