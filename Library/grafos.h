@@ -45,4 +45,27 @@ void showAdjMatrix(Graph G);
 // Libera o espaço alocado para o grafo G
 void liberaGrafo(Graph G);
 
+struct caminhos {
+    vertex pai;
+    float weight;
+};
+
+typedef struct caminhos *CaminhosMinimos;
+
+CaminhosMinimos caminhos_init(Graph G, vertex s);
+
+void imprimeCaminhos(Graph G, vertex src, CaminhosMinimos C);
+
+void liberaCaminhos(CaminhosMinimos C);
+
+// Função de relaxamento entre os vértices u e v.
+int Relax(vertex u, vertex v, float w, CaminhosMinimos C);
+
+// Algoritmo de Bellman Ford: Recebe um grafo G, um vértice src partir do qual
+// serão calculados os menores caminhos até os demais vértices. Retorna um array
+// de caminhos mínimos (com peso do caminho e predecessor do vértice do índice).
+// Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e a execuçãodo
+// código é interrompida.
+CaminhosMinimos BellmanFord(Graph G, vertex src);
+
 #endif //GRAFOS_GRAFOS_H

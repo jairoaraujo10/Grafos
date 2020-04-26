@@ -90,3 +90,89 @@ void liberaGrafo(Graph G) {
     free(G->adjMat);
     free(G);
 }
+
+CaminhosMinimos caminhos_init(Graph G, vertex s) {
+    CaminhosMinimos C = calloc(G->V, sizeof(CaminhosMinimos));
+    int i;
+    for (i = 0; i < G->V; i++) {
+        C[i].pai = -1;
+        C[i].weight = infn;
+    }
+    C[s].pai = s;
+    C[s].weight = 0;
+    return C;
+}
+
+void imprimeCaminhos(Graph G, vertex src, CaminhosMinimos C) {
+    int V = G->V;
+    int i, j;
+    for (i = 0; i < V; i++) {
+        j = i;
+        if (C[j].pai != -1) {
+            do {
+                if (j != i) printf(" <- ");
+                printf("%d", j);
+                j = C[j].pai;
+            } while (j != src);
+            printf(" <- %d", src);
+            printf("\n");
+        }
+    }
+    printf("\n");
+}
+
+void liberaCaminhos(CaminhosMinimos C) {
+    free(C);
+}
+
+int Relax(vertex u, vertex v, float w, CaminhosMinimos C) {
+    float dv, du;
+    du = C[u].weight;
+    dv = C[v].weight;
+
+    // Se d(v) > d(u) + w(u,v)
+    if (du != infn && dv > du + w) {
+        C[v].weight = du + w;
+        C[v].pai = u;
+        return 1;
+    }
+    return 0;
+}
+
+CaminhosMinimos BellmanFord(Graph G, vertex src) {
+    int i;
+    vertex u, v;
+
+    // Inicializa um array de caminhos;
+    CaminhosMinimos C = caminhos_init(G, src);
+
+    // Para i de 1 até V(G) - 1 faça:
+    link p;
+    for (i = 0; i <= G->V - 1; i++) {
+        // Para toda aresta (u,v) pertencente a E(G), execute o relax;
+        for (u = 0; u < G->V; u++) {
+            p = G->adjList[u].head;
+            while (p != NULL) {
+                v = p->v;
+                Relax(u, v, p->weight, C);
+                p = p->next;
+            }
+        }
+    }
+
+    // Verifica se o grafo possui ciclo de peso negativo;
+    // Para cada (u,v) pertencente a E(G), realiza o relax;
+    for (u = 0; u < G->V; u++) {
+        p = G->adjList[u].head;
+        while (p != NULL) {
+            v = p->v;
+            // Se o relax retornar 1, o grafo possui cíclo de peso negativo;
+            if (Relax(u, v, p->weight, C)) {
+                printf("\n------- O grafo possui ciclo de peso negativo -------\n\n");
+                exit(-1);
+            }
+            p = p->next;
+        }
+    }
+    return C;
+}
