@@ -1,2 +1,2 @@
 # Grafos
-Library usada para o estudo e implementação de algoritmos em grados
+Biblioteca usada para o estudo de implementação de algoritmos em grafos na linguagem  C.
