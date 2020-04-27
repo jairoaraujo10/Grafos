@@ -10,29 +10,29 @@
 typedef struct {
     int v;
     float dist;
-} *minHeapNode;
+} minHeapNode;
 
 // Estrutura que representa a min heap
 typedef struct {
     int size;                       // Número de nós
     int *pos;
-    minHeapNode *array;             // Ponteiro que aponta para a lista de caminhos
-} *minHeap;
+    minHeapNode **array;            // Ponteiro que aponta para a lista de caminhos
+} minHeap;
 
-minHeapNode newMinHeapNode(vertex v, CaminhosMinimos C);
+minHeapNode *newMinHeapNode(vertex v, CaminhosMinimos *C);
 
-minHeap createMinHeap(int capacity);
+minHeap *createMinHeap(int capacity);
 
 void swapMinHeapNode(minHeapNode *a, minHeapNode *b);
 
-void minHeapify(minHeap minH, vertex idx);
+void minHeapify(minHeap *minH, vertex idx);
 
-int isEmpty(minHeap minH);
+int isEmpty(minHeap *minH);
 
-minHeapNode extractMin(minHeap minH);
+minHeapNode *extractMin(minHeap *minH);
 
-void decreaseKey(minHeap minH, vertex v, float weight);
+void decreaseKey(minHeap *minH, vertex v, float weight);
 
-int isInMinHeap(minHeap minH, vertex v);
+int isInMinHeap(minHeap *minH, vertex v);
 
 #endif //GRAFOS_MINHEAP_H

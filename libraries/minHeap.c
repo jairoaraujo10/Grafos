@@ -2,18 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-minHeapNode newMinHeapNode(vertex v, CaminhosMinimos C) {
-    minHeapNode minHN = malloc(sizeof(minHeapNode));
+minHeapNode *newMinHeapNode(vertex v, CaminhosMinimos *C) {
+    minHeapNode *minHN = (minHeapNode*) malloc(sizeof(minHeapNode));
     minHN->v = v;
     minHN->dist = C->array[v].weight;
     return minHN;
 }
 
-minHeap createMinHeap(int capacity) {
-    minHeap minH = (minHeap) malloc(sizeof(minHeap));
+minHeap *createMinHeap(int capacity) {
+    minHeap *minH = (minHeap*) malloc(sizeof(minHeap));
     minH->pos = malloc((capacity) * sizeof(int));
     minH->size = 0;
-    minH->array = malloc((capacity) * sizeof(caminhos));
+    minH->array = (minHeapNode **) malloc((capacity) * sizeof(minHeapNode*));
     return minH;
 }
 
@@ -23,7 +23,7 @@ void swapMinHeapNode(minHeapNode *a, minHeapNode *b) {
     *b = t;
 }
 
-void minHeapify(minHeap minH, vertex idx) {
+void minHeapify(minHeap *minH, vertex idx) {
     int smallest, left, right;
     smallest = idx;
     left = 2 * idx + 1;
@@ -38,29 +38,29 @@ void minHeapify(minHeap minH, vertex idx) {
         smallest = right;
 
     if (smallest != idx) {
-        minHeapNode smallestNode = minH->array[smallest];
-        minHeapNode idxNode = minH->array[idx];
+        minHeapNode *smallestNode = minH->array[smallest];
+        minHeapNode *idxNode = minH->array[idx];
 
         minH->pos[smallestNode->v] = idx;
         minH->pos[idxNode->v] = smallest;
 
-        swapMinHeapNode(&minH->array[smallest], &minH->array[idx]);
+        swapMinHeapNode(minH->array[smallest], minH->array[idx]);
 
         minHeapify(minH, smallest);
     }
 }
 
-int isEmpty(minHeap minH) {
+int isEmpty(minHeap *minH) {
     return minH->size == 0;
 }
 
-minHeapNode extractMin(minHeap minH) {
+minHeapNode *extractMin(minHeap *minH) {
     if (isEmpty(minH))
         return NULL;
 
-    minHeapNode root = minH->array[0];
+    minHeapNode *root = minH->array[0];
 
-    minHeapNode lastNode = minH->array[minH->size - 1];
+    minHeapNode *lastNode = minH->array[minH->size - 1];
     minH->array[0] = lastNode;
 
     minH->pos[root->v] = minH->size - 1;
@@ -72,7 +72,7 @@ minHeapNode extractMin(minHeap minH) {
     return root;
 }
 
-void decreaseKey(minHeap minH, vertex v, float weight) {
+void decreaseKey(minHeap *minH, vertex v, float weight) {
     vertex i = minH->pos[v];
 
     minH->array[i]->dist = weight;
@@ -80,13 +80,13 @@ void decreaseKey(minHeap minH, vertex v, float weight) {
     while (i && minH->array[i]->dist < minH->array[(i - 1) / 2]->dist) {
         minH->pos[minH->array[i]->v] = (i - 1) / 2;
         minH->pos[minH->array[(i - 1) / 2]->v] = i;
-        swapMinHeapNode(&minH->array[i], &minH->array[(i - 1) / 2]);
+        swapMinHeapNode(minH->array[i], minH->array[(i - 1) / 2]);
 
         i = (i - 1) / 2;
     }
 }
 
-int isInMinHeap(minHeap minH, vertex v) {
+int isInMinHeap(minHeap *minH, vertex v) {
     if (minH->pos[v] < minH->size)
         return 1;
     return 0;
