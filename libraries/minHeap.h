@@ -23,6 +23,10 @@ minHeapNode *newMinHeapNode(vertex v, CaminhosMinimos *C);
 
 minHeap *createMinHeap(int capacity);
 
+void freeMinHeap(minHeap *minH);
+
+void freeMinHeapNode(minHeapNode *minHN);
+
 void swapMinHeapNode(minHeapNode *a, minHeapNode *b);
 
 void minHeapify(minHeap *minH, vertex idx);

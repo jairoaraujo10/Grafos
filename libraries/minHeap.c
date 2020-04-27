@@ -3,18 +3,30 @@
 #include <string.h>
 
 minHeapNode *newMinHeapNode(vertex v, CaminhosMinimos *C) {
-    minHeapNode *minHN = (minHeapNode*) malloc(sizeof(minHeapNode));
+    minHeapNode *minHN = (minHeapNode *) malloc(sizeof(minHeapNode));
     minHN->v = v;
     minHN->dist = C->array[v].weight;
     return minHN;
 }
 
 minHeap *createMinHeap(int capacity) {
-    minHeap *minH = (minHeap*) malloc(sizeof(minHeap));
+    minHeap *minH = (minHeap *) malloc(sizeof(minHeap));
     minH->pos = malloc((capacity) * sizeof(int));
     minH->size = 0;
-    minH->array = (minHeapNode **) malloc((capacity) * sizeof(minHeapNode*));
+    minH->array = (minHeapNode **) malloc((capacity) * sizeof(minHeapNode *));
     return minH;
+}
+
+void freeMinHeap(minHeap *minH) {
+    if (minH == NULL) return;
+    free(minH->pos);
+    free(minH->array);
+    free(minH);
+}
+
+void freeMinHeapNode(minHeapNode *minHN) {
+    if (minHN == NULL) return;
+    free(minHN);
 }
 
 void swapMinHeapNode(minHeapNode *a, minHeapNode *b) {
