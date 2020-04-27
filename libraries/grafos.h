@@ -24,7 +24,7 @@ typedef struct {
 } Graph;
 
 // Retorna um grafo com V vertices
-Graph *createGraph(int V);
+Graph *initGraph(int V);
 
 // Retorna o ponteiro para um novo nó que será adicionado a lista de adjacencia
 link *newAdjListNode(vertex v, float weight);
@@ -45,7 +45,7 @@ void showAdjMatrix(Graph *G);
 int arestaNegativa(Graph *G);
 
 // Libera o espaço alocado para o grafo G
-void liberaGrafo(Graph *G);
+void freeGraph(Graph *G);
 
 typedef struct {
     vertex pai;
@@ -58,14 +58,14 @@ typedef struct {
     int src;
 } CaminhosMinimos;
 
-CaminhosMinimos *caminhos_init(Graph *G, vertex s);
+CaminhosMinimos *initCaminhos(Graph *G, vertex s);
 
-void imprimeCaminhos(CaminhosMinimos *C);
+void showCaminhos(CaminhosMinimos *C);
 
-void liberaCaminhos(CaminhosMinimos *C);
+void freeCaminhos(CaminhosMinimos *C);
 
 // Função de relaxamento entre os vértices u e v.
-int Relax(vertex u, vertex v, float w, CaminhosMinimos *C);
+//int Relax(vertex u, vertex v, float w, CaminhosMinimos *C);
 
 // Algoritmo de Dijkstra: Recebe um grafo G, um vértice src partir do qual serão
 // calculados os menores caminhos até os demais vértices. etorna os caminhos mínimos.

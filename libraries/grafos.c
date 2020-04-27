@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
-Graph *createGraph(int V) {
+Graph *initGraph(int V) {
     vertex u, v;
     Graph *G = (Graph *) malloc(sizeof(Graph));
     G->V = V;
@@ -46,11 +47,12 @@ void addEdge(Graph *G, vertex u, vertex v, float weight) {
 
 Graph *randonGraph(int V, int rate) {
     int i, j;
-    Graph *G = createGraph(V);
+    Graph *G = initGraph(V);
+    srand(time(0));
     for (i = 0; i < V; i++) {
         for (j = 0; j < V; j++) {
-            if ((rand() % 100) < rate)
-                addEdge(G, i, j, (rand() % 100));
+            if (rand() % 100 < rate)
+                addEdge(G, i, j, (float) (rand() % 100));
         }
     }
     return G;
@@ -95,7 +97,7 @@ int arestaNegativa(Graph *G) {
     return 0;
 }
 
-void liberaGrafo(Graph *G) {
+void freeGraph(Graph *G) {
     if (G == NULL) return;
     vertex v;
     link *atual, *proxNode;
@@ -113,7 +115,7 @@ void liberaGrafo(Graph *G) {
     free(G);
 }
 
-CaminhosMinimos *caminhos_init(Graph *G, vertex src) {
+CaminhosMinimos *initCaminhos(Graph *G, vertex src) {
     int i;
     CaminhosMinimos *C = (CaminhosMinimos *) malloc(sizeof(CaminhosMinimos));
     C->array = (caminhos *) malloc(G->V * sizeof(caminhos));
@@ -128,7 +130,7 @@ CaminhosMinimos *caminhos_init(Graph *G, vertex src) {
     return C;
 }
 
-void imprimeCaminhos(CaminhosMinimos *C) {
+void showCaminhos(CaminhosMinimos *C) {
     if (C == NULL) return;
     int i, j;
     for (i = 0; i < C->V; i++) {
@@ -147,7 +149,7 @@ void imprimeCaminhos(CaminhosMinimos *C) {
     printf("\n");
 }
 
-void liberaCaminhos(CaminhosMinimos *C) {
+void freeCaminhos(CaminhosMinimos *C) {
     if (C == NULL) return;
     free(C->array);
     free(C);
@@ -177,7 +179,7 @@ CaminhosMinimos *Dijkstra(Graph *G, vertex src) {
     }
 
     // Cria uma lista de caminhos e atribui os valores iniciais dos pesos das arestas e dos predecessores dos vértices;
-    CaminhosMinimos *C = caminhos_init(G, src);
+    CaminhosMinimos *C = initCaminhos(G, src);
 
     // O algoritmo é implementado usando uma heap binária
     minHeap *minH = createMinHeap(G->V);
@@ -200,6 +202,7 @@ CaminhosMinimos *Dijkstra(Graph *G, vertex src) {
         // Extrai o vértice com o valor mínimo da distância e o armazena em u;
         minHeapNode *minHN = extractMin(minH);
         u = minHN->v;
+        freeMinHeapNode(minHN);
 
         // Percorre todos os vértices adjacentes de u e atualize seus valores de distância realizando um relaxamento
         link *pCrawl = G->adjList[u].head;
@@ -212,6 +215,7 @@ CaminhosMinimos *Dijkstra(Graph *G, vertex src) {
             pCrawl = pCrawl->next;
         }
     }
+    freeMinHeap(minH);
     return C;
 }
 
@@ -220,7 +224,7 @@ CaminhosMinimos *BellmanFord(Graph *G, vertex src) {
     vertex u, v;
 
     // Inicializa um array de caminhos;
-    CaminhosMinimos *C = caminhos_init(G, src);
+    CaminhosMinimos *C = initCaminhos(G, src);
 
     // Para i de 1 até V(G) - 1 faça:
     link *p;
@@ -255,7 +259,7 @@ CaminhosMinimos *BellmanFord(Graph *G, vertex src) {
 
 Graph *GetSourceGraph(Graph *G) {
     int i;
-    Graph *G0 = createGraph(G->V + 1);
+    Graph *G0 = initGraph(G->V + 1);
     link *p;
     for (i = 1; i < G0->V; i++)
         addEdge(G0, 0, i, 0);
@@ -274,9 +278,7 @@ CaminhosMinimos **Johnson(Graph *G) {
     int i, j;
 
     // Crie um array de caminhos mínimos
-    CaminhosMinimos **CMin = (CaminhosMinimos**) malloc(G->V * sizeof(CaminhosMinimos*));
-    for (i = 0; i < G->V; i++)
-        CMin[i] = caminhos_init(G, i);
+    CaminhosMinimos **CMin = (CaminhosMinimos **) malloc(G->V * sizeof(CaminhosMinimos *));
 
     // Calcula G' a partir de G;
     Graph *G0 = GetSourceGraph(G);
@@ -289,7 +291,7 @@ CaminhosMinimos **Johnson(Graph *G) {
     // Cria um grafo G1, onde:
     //  V(G1) = V(G)
     //  E(G1) = E(G)
-    Graph *G1 = createGraph(G->V);
+    Graph *G1 = initGraph(G->V);
 
     float W;
     link *p;
@@ -314,19 +316,15 @@ CaminhosMinimos **Johnson(Graph *G) {
         // Desfaz a operação que atualizou o peso das arestas de G1;
         // h(u,v) = h'(u,v) + h(v+1) - h(u+1)
         for (j = 0; j < G1->V; j++) {
-            if (CMin[i]->array[j].weight == infn) {
-                CMin[i]->array[j].weight = infn;
-            } else {
-                CMin[i]->array[j].weight = CMin[i]->array[j].weight +
-                                           CaminhosG0->array[j + 1].weight -
-                                           CaminhosG0->array[i + 1].weight;
-            }
+            CMin[i]->array[j].weight = CMin[i]->array[j].weight == infn ? infn :
+                                       CMin[i]->array[j].weight + CaminhosG0->array[j + 1].weight -
+                                       CaminhosG0->array[i + 1].weight;
         }
     }
 
-    liberaGrafo(G0);
-    liberaGrafo(G1);
-    liberaCaminhos(CaminhosG0);
+    freeGraph(G0);
+    freeGraph(G1);
+    freeCaminhos(CaminhosG0);
 
     // Retorne um array de caminhos mínimos;
     return CMin;
