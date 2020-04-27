@@ -6,8 +6,10 @@ int main(int argc, char *argv[]) {
 
     int V = 8, i, j;
     vertex src = 0;
-    Graph *G = createGraph(V);
 
+    Graph *G = randonGraph(V, 25);
+
+    /*Graph *G = initGraph(V);
     addEdge(G, 0, 1, 1);
     addEdge(G, 0, 2, 3);
     addEdge(G, 0, 4, 6);
@@ -19,29 +21,29 @@ int main(int argc, char *argv[]) {
     addEdge(G, 5, 4, 1);
     addEdge(G, 6, 7, -2);
     addEdge(G, 7, 5, -1);
-    addEdge(G, 4, 7, 1);
+    addEdge(G, 4, 7, 1);*/
 
     showAdjList(G);
     showAdjMatrix(G);
 
     printf("Algoritmo de Bellman-Ford:\n");
     CaminhosMinimos *C0 = BellmanFord(G, src);
-    imprimeCaminhos(C0);
-    liberaCaminhos(C0);
+    showCaminhos(C0);
+    freeCaminhos(C0);
 
     printf("Algoritmo de Dijkstra:\n");
     CaminhosMinimos *C1 = Dijkstra(G, src);
-    imprimeCaminhos(C1);
-    liberaCaminhos(C1);
+    showCaminhos(C1);
+    freeCaminhos(C1);
 
     printf("Algoritmo de Johnson:\n");
     CaminhosMinimos **CMin = Johnson(G);
     for (i = 0; i < G->V; i++) {
-        imprimeCaminhos(CMin[i]);
+        showCaminhos(CMin[i]);
     }
 
     // Imprime a matriz dos menores caminhos entre todos os pares de vértices
-    for (i = 0; i < sizeof(CMin); i++) {
+    for (i = 0; i < G->V; i++) {
         for (j = 0; j < G->V; j++) {
             if (CMin[i]->array[j].weight == infn) printf("\tinfn");
             else printf("\t%.2f", CMin[i]->array[j].weight);
@@ -50,9 +52,10 @@ int main(int argc, char *argv[]) {
     }
 
     for (i = 0; i < G->V; i++) {
-        liberaCaminhos(CMin[i]);
+        freeCaminhos(CMin[i]);
     }
     free(CMin);
-    liberaGrafo(G);
+    freeGraph(G);
+
     return 1;
 }
