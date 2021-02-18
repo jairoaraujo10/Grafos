@@ -36,15 +36,15 @@ void addEdge(Graph *G, vertex u, vertex v, float weight);
 Graph *randonGraph(int V, int rate);
 
 // Imprime a lista de adjacência do grafo G
-void showAdjList(Graph *G);
+void printAdjList(Graph *G);
 
 // Imprime a matriz de adjacência do grafo G
-void showAdjMatrix(Graph *G);
+void printAdjMatrix(Graph *G);
 
 // Verifica se o grafo possui aresta de  peso  negativo
-int arestaNegativa(Graph *G);
+int negativeEdge(Graph *G);
 
-// Libera o espaço alocado para o grafo G
+// Libera o espaço alocado para a estrutura Graph G
 void freeGraph(Graph *G);
 
 typedef struct {
@@ -58,33 +58,36 @@ typedef struct {
     int src;
 } CaminhosMinimos;
 
-CaminhosMinimos *initCaminhos(Graph *G, vertex s);
+// Inicializa uma estrutura CaminhosMinimos para Graph *G a partir do vértice src
+CaminhosMinimos *initCaminhos(Graph *G, vertex src);
 
-void showCaminhos(CaminhosMinimos *C);
+// Imprime uma representação da estrutura CaminhosMinimos C
+void printCaminhos(CaminhosMinimos *C);
 
+// Libera o espaço alocado para a estrutura CaminhosMinimos C
 void freeCaminhos(CaminhosMinimos *C);
 
 // Função de relaxamento entre os vértices u e v.
 //int Relax(vertex u, vertex v, float w, CaminhosMinimos *C);
 
-// Algoritmo de Dijkstra: Recebe um grafo G, um vértice src partir do qual serão
-// calculados os menores caminhos até os demais vértices. etorna os caminhos mínimos.
-// Se o grafo  possuir aresta de peso negativo, é impresso um alerta e returnado NULL.
+/* Algoritmo de Dijkstra: Recebe um grafo G, um vértice src partir do qual serão
+ * calculados os menores caminhos até os demais vértices. Retorna os caminhos mínimos.
+ * Se o grafo  possuir aresta de peso negativo, é impresso um alerta e returnado NULL.*/
 CaminhosMinimos *Dijkstra(Graph *G, vertex src);
 
-// Algoritmo de Bellman Ford: Recebe um grafo G, um vértice src partir do qual serão
-// calculados os menores caminhos até os demais vértices. Retorna os caminhos mínimos.
-// Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e returnado NULL.
+/* Algoritmo de Bellman Ford: Recebe um grafo G, um vértice src partir do qual serão
+ * calculados os menores caminhos até os demais vértices. Retorna os caminhos mínimos.
+ * Se o grafo  possuir ciclo de peso negativo, é impresso um alerta e returnado NULL.*/
 CaminhosMinimos *BellmanFord(Graph *G, vertex src);
 
-// Retorna um grafo que contém todos os vértices de G adicionado de um
-// vértice u conectado aos demais por arestas de peso 0, ou seja,
-// w(u,v) = 0 para todos vértices v pertencentes a G;
+/* Retorna um grafo que contém todos os vértices de G adicionado de um
+ * vértice u conectado aos demais por arestas de peso 0, ou seja,
+ * w(u,v) = 0 para todos vértices v pertencentes a G;*/
 Graph *GetSourceGraph(Graph *G);
 
-// Algoritmo de Johnson: Recebe um grafo G. Retorna um array que contém os caminhos
-// mínimos entre todos os pares de vértice. Se o grafo  possuir ciclo de peso
-// negativo, é impresso um alerta e returnado NULL.
+/* Algoritmo de Johnson: Recebe um grafo G. Retorna um array que contém os caminhos
+ * mínimos entre todos os pares de vértice. Se o grafo  possuir ciclo de peso
+ * negativo, é impresso um alerta e returnado NULL.*/
 CaminhosMinimos **Johnson(Graph *G);
 
 #endif //GRAFOS_GRAFOS_H

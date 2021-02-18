@@ -23,23 +23,23 @@ int main(int argc, char *argv[]) {
     addEdge(G, 7, 5, -1);
     addEdge(G, 4, 7, 1);*/
 
-    showAdjList(G);
-    showAdjMatrix(G);
+    printAdjList(G);
+    printAdjMatrix(G);
 
     printf("Algoritmo de Bellman-Ford:\n");
     CaminhosMinimos *C0 = BellmanFord(G, src);
-    showCaminhos(C0);
+    printCaminhos(C0);
     freeCaminhos(C0);
 
     printf("Algoritmo de Dijkstra:\n");
     CaminhosMinimos *C1 = Dijkstra(G, src);
-    showCaminhos(C1);
+    printCaminhos(C1);
     freeCaminhos(C1);
 
     printf("Algoritmo de Johnson:\n");
     CaminhosMinimos **CMin = Johnson(G);
     for (i = 0; i < G->V; i++) {
-        showCaminhos(CMin[i]);
+        printCaminhos(CMin[i]);
     }
 
     // Imprime a matriz dos menores caminhos entre todos os pares de vértices

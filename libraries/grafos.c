@@ -58,7 +58,7 @@ Graph *randonGraph(int V, int rate) {
     return G;
 }
 
-void showAdjList(Graph *G) {
+void printAdjList(Graph *G) {
     if (G == NULL) return;
     vertex a;
     link *b;
@@ -73,7 +73,7 @@ void showAdjList(Graph *G) {
     printf("\n");
 }
 
-void showAdjMatrix(Graph *G) {
+void printAdjMatrix(Graph *G) {
     if (G == NULL) return;
     vertex u, v;
     printf("Matriz de adjacência:\n\t");
@@ -87,7 +87,7 @@ void showAdjMatrix(Graph *G) {
     printf("\n");
 }
 
-int arestaNegativa(Graph *G) {
+int negativeEdge(Graph *G) {
     int u, v;
     for (u = 0; u < G->V; u++) {
         for (v = 0; v < G->V; v++) {
@@ -130,7 +130,7 @@ CaminhosMinimos *initCaminhos(Graph *G, vertex src) {
     return C;
 }
 
-void showCaminhos(CaminhosMinimos *C) {
+void printCaminhos(CaminhosMinimos *C) {
     if (C == NULL) return;
     int i, j;
     for (i = 0; i < C->V; i++) {
@@ -173,7 +173,7 @@ int Relax(vertex u, vertex v, float w, CaminhosMinimos *C) {
 CaminhosMinimos *Dijkstra(Graph *G, vertex src) {
     vertex u, v;
 
-    if (arestaNegativa(G)) {
+    if (negativeEdge(G)) {
         printf("------- O grafo possui aresta de peso negativo -------\n\n");
         return NULL;
     }
